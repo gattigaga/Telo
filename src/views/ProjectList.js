@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import {
     View,
-    StyleSheet
+    StyleSheet,
+    Text
 } from 'react-native';
+
+import Header from '../components/Header';
 
 export default class ProjectList extends Component {
     constructor(props) {
@@ -12,6 +15,7 @@ export default class ProjectList extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Header title="My Projects" />
             </View>
         );
     }
@@ -24,6 +28,7 @@ ProjectList.navigationOptions = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
-    }
+        backgroundColor: 'white',
+        padding: 16
+    },
 });
