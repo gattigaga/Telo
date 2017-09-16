@@ -30,7 +30,6 @@ Header.defaultProps = {
 
 const styles = StyleSheet.create({
     container: {
-        height: 240,
     },
     title: {
         width: '75%',
