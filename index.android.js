@@ -12,11 +12,20 @@ import {
     View
 } from 'react-native';
 
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import Router from './src/config/Router';
+import Reducers from './src/config/Reducers';
+
+let store = createStore(Reducers);
 
 export default class Telo extends Component {
     render() {
-        return <Router />;
+        return (
+            <Provider store={store}>
+                <Router />
+            </Provider>
+        );
     }
 }
 
