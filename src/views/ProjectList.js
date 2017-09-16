@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import Header from '../components/Header';
 import ProjectItem from '../components/ProjectItem';
+import EmptyCaption from '../components/EmptyCaption';
 
 class ProjectList extends Component {
     constructor(props) {
@@ -23,15 +24,21 @@ class ProjectList extends Component {
         return (
             <View style={styles.container}>
                 <Header title="My Projects" />
-                <ScrollView style={{ flex: 1, marginTop: 32 }}>
-                    {projects.map((project) => {
-                        return (
-                            <ProjectItem
-                                key={project.id}
-                                name={project.name} />
-                        );
-                    })}
-                </ScrollView>
+                {projects.length > 0 ? (
+                    <ScrollView style={{ flex: 1, marginTop: 32 }}>
+                        {projects.map((project) => {
+                            return (
+                                <ProjectItem
+                                    key={project.id}
+                                    name={project.name} />
+                            );
+                        })}
+                    </ScrollView>
+                ) : (
+                    <EmptyCaption>
+                        No projects found, let's create one
+                    </EmptyCaption>
+                )}
             </View>
         );
     }
