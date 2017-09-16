@@ -6,10 +6,14 @@ import {
 import { StackNavigator } from 'react-navigation';
 
 import ProjectList from '../views/ProjectList';
+import TaskList from '../views/TaskList';
 
 const Router = StackNavigator({
     ProjectList: { 
         screen: ProjectList 
+    },
+    TaskList: { 
+        screen: TaskList 
     },
 });
 
