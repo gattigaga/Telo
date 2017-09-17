@@ -10,13 +10,46 @@ import { connect } from 'react-redux';
 import Header from '../components/Header';
 import ProjectItem from '../components/ProjectItem';
 import EmptyCaption from '../components/EmptyCaption';
+import ModalCreate from '../components/ModalCreate';
 
 class ProjectList extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            isModalOpen: false,
+            newProject:'', 
+        };
+
+        this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.inputProject = this.inputProject.bind(this);
+    }
+
+    openModal() {
+        this.setState({
+            isModalOpen: true
+        });
+    }
+
+    closeModal() {
+        this.setState({
+            isModalOpen: false
+        });
+    }
+
+    inputProject(text) {
+        this.setState({
+            newProject: text
+        });
     }
 
     render() {
+        let {
+            isModalOpen,
+            newProject
+        } = this.state;
+
         let {
             projects
         } = this.props;
@@ -35,10 +68,17 @@ class ProjectList extends Component {
                         })}
                     </ScrollView>
                 ) : (
-                    <EmptyCaption>
+                    <EmptyCaption onPress={this.openModal}>
                         No projects found, let's create one
                     </EmptyCaption>
                 )}
+                <ModalCreate 
+                    isOpen={isModalOpen}
+                    onPressCancel={this.closeModal}
+                    onPressOK={() => {}}
+                    onChangeText={this.inputProject}
+                    value={newProject}
+                    title="New Project" />
             </View>
         );
     }
