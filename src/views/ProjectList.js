@@ -12,6 +12,10 @@ import ProjectItem from '../components/ProjectItem';
 import EmptyCaption from '../components/EmptyCaption';
 import ModalCreate from '../components/ModalCreate';
 
+import {
+    addProject
+} from '../config/Actions';
+
 class ProjectList extends Component {
     constructor(props) {
         super(props);
@@ -51,7 +55,8 @@ class ProjectList extends Component {
         } = this.state;
 
         let {
-            projects
+            projects,
+            submit
         } = this.props;
 
         return (
@@ -75,7 +80,7 @@ class ProjectList extends Component {
                 <ModalCreate 
                     isOpen={isModalOpen}
                     onPressCancel={this.closeModal}
-                    onPressOK={() => {}}
+                    onPressOK={() => submit(newProject, () => this.closeModal())}
                     onChangeText={this.inputProject}
                     value={newProject}
                     title="New Project" />
@@ -102,6 +107,16 @@ function mapStateToProps(state) {
     }
 }
 
+function mapDispatchToProps(dispatch, ownProps) {
+    return {
+        submit: (name, callback) => {
+            dispatch(addProject(name));
+            callback();
+        }
+    }
+}
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(ProjectList);
