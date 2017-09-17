@@ -1,11 +1,14 @@
 import { combineReducers } from 'redux';
 import {
+    ADD_PROJECT_BATCH,
     ADD_PROJECT,
     REMOVE_PROJECT
 } from './Actions';
 
 function projects(state = [], action) {
     switch (action.type) {
+        case ADD_PROJECT_BATCH:
+            return [ ...action.projects ];
         case ADD_PROJECT:
             return [
                 ...state,

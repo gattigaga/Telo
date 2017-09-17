@@ -5,14 +5,23 @@ import {
     Text,
     AsyncStorage
 } from 'react-native';
+import { connect } from 'react-redux';
 
-export default class SplashScreen extends Component {
+import {
+    addProjectBatch
+} from '../config/Actions';
+
+class SplashScreen extends Component {
     constructor(props) {
         super(props);
     }
 
     componentDidMount() {
-        this.navigate('ProjectList');
+        let { getProjects } = this.props;
+
+        getProjects(() => {
+            this.navigate('ProjectList');
+        });
     }
 
     navigate(view) {
@@ -46,3 +55,28 @@ const styles = StyleSheet.create({
         fontSize: 64
     }
 });
+
+function mapDispatchToProps(dispatch, ownProps) {
+    return {
+        getProjects: async (callback) => {
+            try {
+                let projects = await AsyncStorage.getItem('projects');
+                
+                if (projects !== null){
+                    dispatch(addProjectBatch(projects));
+                } else {
+                    await AsyncStorage.setItem('projects', []);
+                }
+
+                callback();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(SplashScreen);
