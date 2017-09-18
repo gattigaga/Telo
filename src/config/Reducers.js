@@ -2,7 +2,10 @@ import { combineReducers } from 'redux';
 import {
     ADD_PROJECT_BATCH,
     ADD_PROJECT,
-    REMOVE_PROJECT
+    REMOVE_PROJECT,
+    ADD_TASK_BATCH,
+    ADD_TASK,
+    REMOVE_TASK,
 } from './Actions';
 
 function projects(state = [], action) {
@@ -26,8 +29,30 @@ function projects(state = [], action) {
     }
 }
 
+function tasks(state = [], action) {
+    switch (action.type) {
+        case ADD_TASK_BATCH:
+            return [ ...action.tasks ];
+        case ADD_TASK:
+            return [
+                ...state,
+                {
+                    id: action.id,
+                    name: action.name
+                }
+            ];
+        case REMOVE_TASK:
+            return state.filter((task) => {
+                return task.id != action.id;
+            });
+        default:
+            return state;
+    }
+}
+
 const Reducers = combineReducers({
-    projects
+    projects,
+    tasks
 });
 
 export default Reducers;
