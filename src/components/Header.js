@@ -9,13 +9,12 @@ import PropTypes from 'prop-types';
 export default class Header extends Component {
     render() {
         let { 
-            title
+            title,
+            children
         } = this.props;
 
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>{title}</Text>
-            </View>
+            <Text style={styles.title}>{title}</Text>
         );
     }
 }
@@ -29,13 +28,11 @@ Header.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-    container: {
-    },
     title: {
         width: '75%',
         fontSize: 48,
         fontWeight: 'bold',
         color: '#555',
         marginTop: 48
-    }
+    },
 });

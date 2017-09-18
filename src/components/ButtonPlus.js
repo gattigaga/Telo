@@ -11,12 +11,14 @@ export default class ButtonPlus extends Component {
     render() {
         let {
             onPress,
-            size
+            size,
+            style
         } = this.props;
 
         let containerStyle = {
             width: size,
             height: size,
+            ...style,
         };
 
         let textStyle = {

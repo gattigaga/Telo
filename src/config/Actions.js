@@ -2,8 +2,6 @@ export const ADD_PROJECT_BATCH = 'ADD_PROJECT_BATCH';
 export const ADD_PROJECT = 'ADD_PROJECT';
 export const REMOVE_PROJECT = 'REMOVE_PROJECT';
 
-let projectID = 1;
-
 export function addProjectBatch(projects) {
     return {
         type: ADD_PROJECT_BATCH,
@@ -11,10 +9,10 @@ export function addProjectBatch(projects) {
     }
 }
 
-export function addProject(name) {
+export function addProject(id, name) {
     return {
         type: ADD_PROJECT,
-        id: projectID++,
+        id,
         name
     }
 }

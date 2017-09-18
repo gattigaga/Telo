@@ -63,9 +63,10 @@ function mapDispatchToProps(dispatch, ownProps) {
                 let projects = await AsyncStorage.getItem('projects');
                 
                 if (projects !== null){
+                    projects = JSON.parse(projects);
                     dispatch(addProjectBatch(projects));
                 } else {
-                    await AsyncStorage.setItem('projects', []);
+                    await AsyncStorage.setItem('projects', JSON.stringify([]));
                 }
 
                 callback();

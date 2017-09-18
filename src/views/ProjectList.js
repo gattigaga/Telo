@@ -3,14 +3,16 @@ import {
     View,
     StyleSheet,
     Text,
-    ScrollView
+    ScrollView,
+    AsyncStorage
 } from 'react-native';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
 import Header from '../components/Header';
 import ProjectItem from '../components/ProjectItem';
-import EmptyCaption from '../components/EmptyCaption';
 import ModalCreate from '../components/ModalCreate';
+import ButtonPlus from '../components/ButtonPlus';
 
 import {
     addProject
@@ -22,7 +24,7 @@ class ProjectList extends Component {
 
         this.state = {
             isModalOpen: false,
-            newProject:'', 
+            newProject: '',
         };
 
         this.openModal = this.openModal.bind(this);
@@ -62,6 +64,12 @@ class ProjectList extends Component {
         return (
             <View style={styles.container}>
                 <Header title="My Projects" />
+                <View style={{ position: 'absolute', top: 24, right: 24 }}>
+                    <ButtonPlus 
+                        size={32}
+                        onPress={this.openModal} />
+                </View>
+
                 {projects.length > 0 ? (
                     <ScrollView style={{ flex: 1, marginTop: 32 }}>
                         {projects.map((project) => {
@@ -73,11 +81,14 @@ class ProjectList extends Component {
                         })}
                     </ScrollView>
                 ) : (
-                    <EmptyCaption onPress={this.openModal}>
-                        No projects found, let's create one
-                    </EmptyCaption>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={styles.empty}>
+                            No projects found, let's create one.
+                        </Text>
+                    </View>
                 )}
-                <ModalCreate 
+
+                <ModalCreate
                     isOpen={isModalOpen}
                     onPressCancel={this.closeModal}
                     onPressOK={() => submit(newProject, () => this.closeModal())}
@@ -97,8 +108,21 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        padding: 16
+        padding: 16,
+        position: 'relative'
     },
+    buttonPlus: {
+        position: 'absolute',
+        top: 32,
+        right: 32,
+    },
+    empty: {
+        width: '75%',
+        fontSize: 16,
+        color: '#ccc',
+        textAlign: 'center',
+        marginBottom: 32
+    }
 });
 
 function mapStateToProps(state) {
@@ -109,14 +133,35 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch, ownProps) {
     return {
-        submit: (name, callback) => {
-            dispatch(addProject(name));
-            callback();
+        submit: (id, name) => {
+            dispatch(addProject(id, name));
         }
     }
 }
 
+function mergeProps(stateProps, dispatchProps, ownProps) {
+    return {
+        ...stateProps,
+        submit: async (name, callback) => {
+            const lastProject = _.maxBy(stateProps.projects, 'id');
+            const id = lastProject ? lastProject.id + 1 : 1;
+
+            try {
+                const project = { id, name };
+                const projects = JSON.stringify([...stateProps.projects, project]);
+                await AsyncStorage.setItem('projects', projects);
+
+                dispatchProps.submit(id, name);
+                callback();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    };
+}
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
+    mergeProps
 )(ProjectList);
