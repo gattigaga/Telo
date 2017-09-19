@@ -35,11 +35,12 @@ export function addTaskBatch(tasks) {
     }
 }
 
-export function addTask(id, name) {
+export function addTask(id, name, projectID) {
     return {
         type: ADD_TASK,
         id,
-        name
+        name,
+        projectID
     }
 }
 

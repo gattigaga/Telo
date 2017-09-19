@@ -30,6 +30,7 @@ class ProjectList extends Component {
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.inputProject = this.inputProject.bind(this);
+        this.toTaskList = this.toTaskList.bind(this);
     }
 
     openModal() {
@@ -48,6 +49,11 @@ class ProjectList extends Component {
         this.setState({
             newProject: text
         });
+    }
+
+    toTaskList(projectID) {
+        let { navigate } = this.props.navigation;
+        navigate('TaskList', { projectID });
     }
 
     render() {
@@ -76,7 +82,8 @@ class ProjectList extends Component {
                             return (
                                 <ProjectItem
                                     key={project.id}
-                                    name={project.name} />
+                                    name={project.name}
+                                    onPress={() => this.toTaskList(project.id)} />
                             );
                         })}
                     </ScrollView>
@@ -91,7 +98,10 @@ class ProjectList extends Component {
                 <ModalCreate
                     isOpen={isModalOpen}
                     onPressCancel={this.closeModal}
-                    onPressOK={() => submit(newProject, () => this.closeModal())}
+                    onPressOK={() => submit(newProject, () => {
+                        this.closeModal();
+                        this.setState({ newProject: '' });
+                    })}
                     onChangeText={this.inputProject}
                     value={newProject}
                     title="New Project" />
@@ -141,6 +151,7 @@ function mapDispatchToProps(dispatch, ownProps) {
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
     return {
+        ...ownProps,
         ...stateProps,
         submit: async (name, callback) => {
             const lastProject = _.maxBy(stateProps.projects, 'id');

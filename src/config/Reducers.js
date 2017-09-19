@@ -38,7 +38,8 @@ function tasks(state = [], action) {
                 ...state,
                 {
                     id: action.id,
-                    name: action.name
+                    name: action.name,
+                    projectID: action.projectID,
                 }
             ];
         case REMOVE_TASK:

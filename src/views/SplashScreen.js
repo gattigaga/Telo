@@ -8,7 +8,8 @@ import {
 import { connect } from 'react-redux';
 
 import {
-    addProjectBatch
+    addProjectBatch,
+    addTaskBatch,
 } from '../config/Actions';
 
 class SplashScreen extends Component {
@@ -61,12 +62,20 @@ function mapDispatchToProps(dispatch, ownProps) {
         getProjects: async (callback) => {
             try {
                 let projects = await AsyncStorage.getItem('projects');
+                let tasks = await AsyncStorage.getItem('tasks');
                 
                 if (projects !== null){
                     projects = JSON.parse(projects);
                     dispatch(addProjectBatch(projects));
                 } else {
                     await AsyncStorage.setItem('projects', JSON.stringify([]));
+                }
+
+                if (tasks !== null){
+                    tasks = JSON.parse(tasks);
+                    dispatch(addTaskBatch(tasks));
+                } else {
+                    await AsyncStorage.setItem('tasks', JSON.stringify([]));
                 }
 
                 callback();
