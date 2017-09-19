@@ -6,6 +6,7 @@ import {
     ADD_TASK_BATCH,
     ADD_TASK,
     REMOVE_TASK,
+    TOGGLE_TASK,
 } from './Actions';
 
 function projects(state = [], action) {
@@ -40,11 +41,26 @@ function tasks(state = [], action) {
                     id: action.id,
                     name: action.name,
                     projectID: action.projectID,
+                    isComplete: false,
                 }
             ];
         case REMOVE_TASK:
             return state.filter((task) => {
                 return task.id != action.id;
+            });
+        case TOGGLE_TASK:
+            return state.map((task) => {
+                const isIDValid = task.id == action.id;
+                const isProjectIDValid = task.projectID == action.projectID;
+
+                if (isIDValid && isProjectIDValid) {
+                    return {
+                        ...task,
+                        isComplete: action.isComplete
+                    };
+                }
+
+                return task;
             });
         default:
             return state;

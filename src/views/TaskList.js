@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import Header from '../components/Header';
-import ProjectItem from '../components/ProjectItem';
+import TaskItem from '../components/TaskItem';
 import ModalCreate from '../components/ModalCreate';
 import ButtonPlus from '../components/ButtonPlus';
 
@@ -75,9 +75,10 @@ class TaskList extends Component {
                     <ScrollView style={{ flex: 1, marginTop: 32 }}>
                         {tasks.map((task) => {
                             return (
-                                <ProjectItem
+                                <TaskItem
                                     key={task.id}
-                                    name={task.name} />
+                                    name={task.name}
+                                    isComplete={task.isComplete} />
                             );
                         })}
                     </ScrollView>

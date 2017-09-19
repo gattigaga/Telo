@@ -20,6 +20,8 @@ class SplashScreen extends Component {
     componentDidMount() {
         let { getProjects } = this.props;
 
+        AsyncStorage.clear();
+
         getProjects(() => {
             this.navigate('ProjectList');
         });

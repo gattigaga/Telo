@@ -5,6 +5,7 @@ export const REMOVE_PROJECT = 'REMOVE_PROJECT';
 export const ADD_TASK_BATCH = 'ADD_TASK_BATCH';
 export const ADD_TASK = 'ADD_TASK';
 export const REMOVE_TASK = 'REMOVE_TASK';
+export const TOGGLE_TASK = 'TOGGLE_TASK';
 
 export function addProjectBatch(projects) {
     return {
@@ -48,6 +49,15 @@ export function removeTask(id) {
     return {
         type: REMOVE_TASK,
         id
+    }
+}
+
+export function toggleTask(id, projectID, isComplete) {
+    return {
+        type: TOGGLE_TASK,
+        id,
+        projectID,
+        isComplete
     }
 }
 

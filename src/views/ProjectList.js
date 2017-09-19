@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
     return {
         projects: state.projects,
+        tasks: state.tasks,
     }
 }
 
