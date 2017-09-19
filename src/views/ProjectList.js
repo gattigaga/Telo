@@ -64,6 +64,7 @@ class ProjectList extends Component {
 
         let {
             projects,
+            tasks,
             submit
         } = this.props;
 
@@ -79,10 +80,20 @@ class ProjectList extends Component {
                 {projects.length > 0 ? (
                     <ScrollView style={{ flex: 1, marginTop: 32 }}>
                         {projects.map((project) => {
+                            const completedTask = tasks.filter((task) => {
+                                return task.projectID == project.id && task.isComplete;
+                            }).length;
+
+                            const totalTasks = tasks.filter((task) => {
+                                return task.projectID == project.id;
+                            }).length;
+
                             return (
                                 <ProjectItem
                                     key={project.id}
                                     name={project.name}
+                                    completedTask={completedTask}
+                                    totalTasks={totalTasks}
                                     onPress={() => this.toTaskList(project.id)} />
                             );
                         })}
