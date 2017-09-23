@@ -6,6 +6,7 @@ import {
     AsyncStorage
 } from 'react-native';
 import { connect } from 'react-redux';
+import { NavigationActions } from 'react-navigation';
 
 import {
     addProjectBatch,
@@ -18,16 +19,18 @@ class SplashScreen extends Component {
     }
 
     componentDidMount() {
-        let { getProjects } = this.props;
+        let { getProjects, navigation } = this.props;
 
         getProjects(() => {
-            this.navigate('ProjectList');
-        });
-    }
+            const resetAction = NavigationActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({ routeName: 'ProjectList' })
+                ]
+            });
 
-    navigate(view) {
-        let { navigate } = this.props.navigation;
-        navigate(view);
+            navigation.dispatch(resetAction);
+        });
     }
 
     render() {
@@ -63,15 +66,15 @@ function mapDispatchToProps(dispatch, ownProps) {
             try {
                 let projects = await AsyncStorage.getItem('projects');
                 let tasks = await AsyncStorage.getItem('tasks');
-                
-                if (projects !== null){
+
+                if (projects !== null) {
                     projects = JSON.parse(projects);
                     dispatch(addProjectBatch(projects));
                 } else {
                     await AsyncStorage.setItem('projects', JSON.stringify([]));
                 }
 
-                if (tasks !== null){
+                if (tasks !== null) {
                     tasks = JSON.parse(tasks);
                     dispatch(addTaskBatch(tasks));
                 } else {
