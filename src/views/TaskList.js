@@ -15,7 +15,8 @@ import ModalCreate from '../components/ModalCreate';
 import ButtonPlus from '../components/ButtonPlus';
 
 import {
-    addTask
+    addTask,
+    toggleTask,
 } from '../config/Actions';
 
 class TaskList extends Component {
@@ -59,7 +60,8 @@ class TaskList extends Component {
         let {
             tasks,
             project,
-            submit
+            submit,
+            check,
         } = this.props;
 
         return (
@@ -78,7 +80,8 @@ class TaskList extends Component {
                                 <TaskItem
                                     key={task.id}
                                     name={task.name}
-                                    isComplete={task.isComplete} />
+                                    isComplete={task.isComplete}
+                                    onPressCheck={() => check(task)} />
                             );
                         })}
                     </ScrollView>
@@ -141,7 +144,10 @@ function mapDispatchToProps(dispatch, ownProps) {
     return {
         submit: (id, name, projectID) => {
             dispatch(addTask(id, name, projectID));
-        }
+        },
+        check: (task) => {
+            dispatch(toggleTask(task.id, task.projectID));
+        },
     }
 }
 
@@ -165,6 +171,29 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
 
                 dispatchProps.submit(id, name, projectID);
                 callback();
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        check: async (task) => {
+            try {
+                const tasks = JSON.stringify(stateProps.tasks.map((stateTask) => {
+                    const isIDValid = task.id == stateTask.id;
+                    const isProjectIDValid = task.projectID == stateTask.projectID;
+    
+                    if (isIDValid && isProjectIDValid) {
+                        return {
+                            ...stateTask,
+                            isComplete: !stateTask.isComplete
+                        };
+                    }
+    
+                    return stateTask;
+                }));
+
+                await AsyncStorage.setItem('tasks', tasks);
+
+                dispatchProps.check(task);
             } catch (error) {
                 console.error(error);
             }

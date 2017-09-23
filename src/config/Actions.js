@@ -52,12 +52,11 @@ export function removeTask(id) {
     }
 }
 
-export function toggleTask(id, projectID, isComplete) {
+export function toggleTask(id, projectID) {
     return {
         type: TOGGLE_TASK,
         id,
         projectID,
-        isComplete
     }
 }
 

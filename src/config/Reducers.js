@@ -56,7 +56,7 @@ function tasks(state = [], action) {
                 if (isIDValid && isProjectIDValid) {
                     return {
                         ...task,
-                        isComplete: action.isComplete
+                        isComplete: !task.isComplete
                     };
                 }
 
