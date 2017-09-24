@@ -30,18 +30,20 @@ export default class ProjectItem extends Component {
             onPanResponderGrant: (e, gestureState) => {
                 this.projectPosition.setValue({ x: 0 });
             },
-            onPanResponderMove: Animated.event([
-                null, { dx: this.projectPosition.x, dy: 0 },
-            ]),
+            onPanResponderMove: (e, gestureState) => {
+                if (gestureState.dx < 0) return;
+                this.projectPosition.setValue({ x: gestureState.dx });
+            },
             onPanResponderRelease: (e, gestureState) => {
                 const width = Dimensions.get('screen').width;
 
                 Animated.spring(this.projectPosition.x,{ 
                     toValue: 0, 
-                    friction: 5
+                    friction: 6,
+                    tension: 0.5,
                 }).start();
 
-                if (onDragRelease && gestureState.dx > width / 2) {
+                if (onDragRelease && gestureState.dx > width * 0.6) {
                     onDragRelease();
                 }
             }
