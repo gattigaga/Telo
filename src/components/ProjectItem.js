@@ -3,11 +3,51 @@ import {
     View,
     StyleSheet,
     Text,
-    TouchableOpacity
+    TouchableWithoutFeedback,
+    Dimensions,
+    Animated,
+    PanResponder,
 } from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class ProjectItem extends Component {
+    constructor(props) {
+        super(props);
+
+        this.projectPosition = new Animated.ValueXY();
+    }
+
+    componentWillMount() {
+        this.initPanResponder();
+    }
+
+    initPanResponder() {
+        let { onDragRelease } = this.props;
+
+        this.panResponder = PanResponder.create({
+            onMoveShouldSetResponderCapture: () => true,
+            onMoveShouldSetPanResponderCapture: () => true,
+            onPanResponderGrant: (e, gestureState) => {
+                this.projectPosition.setValue({ x: 0 });
+            },
+            onPanResponderMove: Animated.event([
+                null, { dx: this.projectPosition.x, dy: 0 },
+            ]),
+            onPanResponderRelease: (e, gestureState) => {
+                const width = Dimensions.get('screen').width;
+
+                Animated.spring(this.projectPosition.x,{ 
+                    toValue: 0, 
+                    friction: 5
+                }).start();
+
+                if (onDragRelease && gestureState.dx > width / 2) {
+                    onDragRelease();
+                }
+            }
+        });
+    }
+
     render() {
         let { 
             name,
@@ -16,13 +56,20 @@ export default class ProjectItem extends Component {
             onPress
         } = this.props;
 
+        let translateX = this.projectPosition.x;
+        let containerStyle = { transform: [{ translateX }] };
+
         return (
-            <TouchableOpacity onPress={onPress}>
-                <View style={styles.container}>
+            <Animated.View 
+                {...this.panResponder.panHandlers}
+                style={[styles.container, containerStyle]}>
+                <TouchableWithoutFeedback onPress={onPress}>
+                <View style={{ flex: 1 }}>
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.task}>{completedTasks} / {totalTasks} Tasks</Text>
                 </View>
-            </TouchableOpacity>
+                </TouchableWithoutFeedback>
+            </Animated.View>
         );
     }
 }
@@ -32,6 +79,7 @@ ProjectItem.propTypes = {
     completedTasks: PropTypes.number,
     totalTasks: PropTypes.number,
     onPress: PropTypes.func,
+    onDragRelease: PropTypes.func,
 };
 
 ProjectItem.defaultProps = {

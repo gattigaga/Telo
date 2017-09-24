@@ -15,7 +15,9 @@ import ModalCreate from '../components/ModalCreate';
 import ButtonPlus from '../components/ButtonPlus';
 
 import {
-    addProject
+    addProject,
+    removeProject,
+    removeTaskBatch,
 } from '../config/Actions';
 
 class ProjectList extends Component {
@@ -65,7 +67,8 @@ class ProjectList extends Component {
         let {
             projects,
             tasks,
-            submit
+            submit,
+            remove,
         } = this.props;
 
         return (
@@ -94,7 +97,8 @@ class ProjectList extends Component {
                                     name={project.name}
                                     completedTasks={completedTasks}
                                     totalTasks={totalTasks}
-                                    onPress={() => this.toTaskList(project.id)} />
+                                    onPress={() => this.toTaskList(project.id)}
+                                    onDragRelease={() => remove(project.id)} />
                             );
                         })}
                     </ScrollView>
@@ -157,7 +161,11 @@ function mapDispatchToProps(dispatch, ownProps) {
     return {
         submit: (id, name) => {
             dispatch(addProject(id, name));
-        }
+        },
+        remove: (projectID) => {
+            dispatch(removeProject(projectID));
+            dispatch(removeTaskBatch(projectID));
+        },
     }
 }
 
@@ -179,7 +187,25 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
             } catch (error) {
                 console.error(error);
             }
-        }
+        },
+        remove: async (projectID) => {
+            try {
+                const projects = JSON.stringify(stateProps.projects.filter((project) => {
+                    return project.id != projectID;
+                }));
+
+                const tasks = JSON.stringify(stateProps.tasks.filter((task) => {
+                    return task.projectID != projectID;
+                }));
+
+                await AsyncStorage.setItem('projects', projects);
+                await AsyncStorage.setItem('tasks', tasks);
+
+                dispatchProps.remove(projectID);
+            } catch (error) {
+                console.error(error);
+            }
+        },
     };
 }
 

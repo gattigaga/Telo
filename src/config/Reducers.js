@@ -5,6 +5,7 @@ import {
     REMOVE_PROJECT,
     ADD_TASK_BATCH,
     ADD_TASK,
+    REMOVE_TASK_BATCH,
     REMOVE_TASK,
     TOGGLE_TASK,
 } from './Actions';
@@ -44,6 +45,10 @@ function tasks(state = [], action) {
                     isComplete: false,
                 }
             ];
+        case REMOVE_TASK_BATCH:
+            return state.filter((task) => {
+                return task.projectID != action.projectID;
+            });
         case REMOVE_TASK:
             return state.filter((task) => {
                 const isIDValid = task.id == action.id;
