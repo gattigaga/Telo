@@ -70,6 +70,7 @@ export default class ProjectItem extends Component {
         } = this.props;
 
         let translateX = this.projectPosition.x;
+
         let containerStyle = { 
             transform: [{ translateX }],
             opacity: this.projectOpacity,
@@ -80,10 +81,19 @@ export default class ProjectItem extends Component {
                 {...this.panResponder.panHandlers}
                 style={[styles.container, containerStyle]}>
                 <TouchableWithoutFeedback onPress={onPress}>
-                <View style={{ flex: 1 }}>
-                    <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.task}>{completedTasks} / {totalTasks} Tasks</Text>
-                </View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={styles.name}>{name}</Text>
+                            <Text style={styles.task}>{completedTasks} / {totalTasks} Tasks</Text>
+                        </View>
+                        <View style={styles.caption}>
+                            {completedTasks == totalTasks &&
+                                <Animated.Text style={styles.complete}>
+                                    COMPLETED
+                                </Animated.Text>
+                            }
+                        </View>
+                    </View>
                 </TouchableWithoutFeedback>
             </Animated.View>
         );
@@ -117,5 +127,19 @@ const styles = StyleSheet.create({
     },
     task: {
         color: '#ccc'
+    },
+    caption: {
+        marginLeft: 32, 
+        alignItems: 'center', 
+        justifyContent: 'center',
+    },
+    complete: {
+        color: 'white',
+        backgroundColor: '#81bf42',
+        width: 72,
+        paddingVertical: 4,
+        textAlign: 'center',
+        fontSize: 9,
+        borderRadius: 4,
     }
 });
