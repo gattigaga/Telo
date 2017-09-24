@@ -4,7 +4,8 @@ import {
     StyleSheet,
     Text,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    Animated,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -13,6 +14,7 @@ import Header from '../components/Header';
 import TaskItem from '../components/TaskItem';
 import ModalCreate from '../components/ModalCreate';
 import ButtonPlus from '../components/ButtonPlus';
+import TaskIndicator from '../components/TaskIndicator';
 
 import {
     addTask,
@@ -66,14 +68,20 @@ class TaskList extends Component {
             remove,
         } = this.props;
 
+        let completedTasks = tasks.filter(task => task.isComplete).length;
+
         return (
             <View style={styles.container}>
                 <Header title={project.name} />
                 <View style={{ position: 'absolute', top: 24, right: 24 }}>
-                    <ButtonPlus 
+                    <ButtonPlus
                         size={32}
                         onPress={this.openModal} />
                 </View>
+
+                <TaskIndicator 
+                    completedTasks={completedTasks}
+                    totalTasks={tasks.length} />
 
                 {tasks.length > 0 ? (
                     <ScrollView style={{ flex: 1, marginTop: 32 }}>
@@ -133,7 +141,7 @@ const styles = StyleSheet.create({
         color: '#ccc',
         textAlign: 'center',
         marginBottom: 32
-    }
+    },
 });
 
 function mapStateToProps(state) {
@@ -186,14 +194,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
                 const tasks = JSON.stringify(stateProps.tasks.map((stateTask) => {
                     const isIDValid = task.id == stateTask.id;
                     const isProjectIDValid = task.projectID == stateTask.projectID;
-    
+
                     if (isIDValid && isProjectIDValid) {
                         return {
                             ...stateTask,
                             isComplete: !stateTask.isComplete
                         };
                     }
-    
+
                     return stateTask;
                 }));
 
@@ -209,7 +217,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
                 const tasks = JSON.stringify(stateProps.tasks.filter((stateTask) => {
                     const isIDValid = task.id == stateTask.id;
                     const isProjectIDValid = task.projectID == stateTask.projectID;
-    
+
                     return !(isIDValid && isProjectIDValid);
                 }));
 
