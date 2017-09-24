@@ -83,7 +83,7 @@ class TaskList extends Component {
                                     key={task.id}
                                     name={task.name}
                                     isComplete={task.isComplete}
-                                    onPressCheck={() => check(task)}
+                                    onPress={() => check(task)}
                                     onDragRelease={() => remove(task)} />
                             );
                         })}

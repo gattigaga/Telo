@@ -79,7 +79,6 @@ export default class TaskItem extends Component {
         let {
             name,
             onPress,
-            onPressCheck,
             isComplete,
         } = this.props;
 
@@ -91,22 +90,24 @@ export default class TaskItem extends Component {
         };
 
         return (
-            // <TouchableWithoutFeedback onPress={onPress}>
-                <Animated.View 
-                    {...this.panResponder.panHandlers}
-                    style={[styles.container, containerStyle]}>
-                    <View style={{ flex: 1 }}>
-                        <Animated.Text style={[styles.name, nameStyle]}>
-                            {name}
-                        </Animated.Text>
+            <Animated.View 
+                {...this.panResponder.panHandlers}
+                style={[styles.container, containerStyle]}>
+                <TouchableWithoutFeedback onPress={onPress}>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            <Animated.Text style={[styles.name, nameStyle]}>
+                                {name}
+                            </Animated.Text>
+                        </View>
+                        <View style={{ marginLeft: 32 }}>
+                            <Checkbox
+                                isChecked={isComplete}
+                                onPress={onPress} />
+                        </View>
                     </View>
-                    <View style={{ marginLeft: 32 }}>
-                        <Checkbox
-                            isChecked={isComplete}
-                            onPress={onPressCheck} />
-                    </View>
-                </Animated.View>
-            // </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback>
+            </Animated.View>
         );
     }
 }
@@ -115,7 +116,6 @@ TaskItem.propTypes = {
     name: PropTypes.string,
     isComplete: PropTypes.bool,
     onPress: PropTypes.func,
-    onPressCheck: PropTypes.func,
     onDragRelease: PropTypes.func,
 };
 
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         borderBottomWidth: 0.5,
         borderBottomColor: '#eee',
-        flexDirection: 'row'
     },
     name: {
         color: '#555',
