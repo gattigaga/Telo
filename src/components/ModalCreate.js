@@ -15,6 +15,7 @@ export default class ModalCreate extends Component {
             isOpen,
             value,
             title,
+            maxChar,
             onPressOK,
             onPressCancel,
             onChangeText
@@ -40,7 +41,8 @@ export default class ModalCreate extends Component {
                                     style={styles.input} 
                                     underlineColorAndroid="#eee"
                                     selectionColor="#eee"
-                                    autoCorrect={false} />
+                                    autoCorrect={false}
+                                    maxLength={maxChar} />
                             </View>
                             <View style={styles.buttonBottom}>
                                 <TouchableNativeFeedback onPress={onPressOK}>
@@ -66,6 +68,7 @@ ModalCreate.propTypes = {
     isOpen: PropTypes.bool,
     value: PropTypes.string,
     title: PropTypes.string,
+    maxChar: PropTypes.number,
     onPressOK: PropTypes.func,
     onPressCancel: PropTypes.func,
     onChangeText: PropTypes.func,
@@ -73,6 +76,7 @@ ModalCreate.propTypes = {
 
 ModalCreate.defaultProps = {
     isOpen: false,
+    maxChar: 64,
 };
 
 const styles = StyleSheet.create({
