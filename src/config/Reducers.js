@@ -46,7 +46,10 @@ function tasks(state = [], action) {
             ];
         case REMOVE_TASK:
             return state.filter((task) => {
-                return task.id != action.id;
+                const isIDValid = task.id == action.id;
+                const isProjectIDValid = task.projectID == action.projectID;
+
+                return !(isIDValid && isProjectIDValid);
             });
         case TOGGLE_TASK:
             return state.map((task) => {

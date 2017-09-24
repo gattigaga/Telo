@@ -45,10 +45,11 @@ export function addTask(id, name, projectID) {
     }
 }
 
-export function removeTask(id) {
+export function removeTask(id, projectID) {
     return {
         type: REMOVE_TASK,
-        id
+        id,
+        projectID,
     }
 }
 

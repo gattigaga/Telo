@@ -6,6 +6,8 @@ import {
     TouchableWithoutFeedback,
     Animated,
     Easing,
+    PanResponder,
+    Dimensions,
 } from 'react-native';
 import PropTypes from 'prop-types';
 import Checkbox from './Checkbox';
@@ -15,6 +17,11 @@ export default class TaskItem extends Component {
         super(props);
 
         this.nameColor = new Animated.Value(1);
+        this.taskPosition = new Animated.ValueXY();
+    }
+
+    componentWillMount() {
+        this.initPanResponder();
     }
 
     componentDidMount() {
@@ -25,10 +32,37 @@ export default class TaskItem extends Component {
         this.handleOpacity();
     }
 
+    initPanResponder() {
+        let { onDragRelease } = this.props;
+
+        this.panResponder = PanResponder.create({
+            onMoveShouldSetResponderCapture: () => true,
+            onMoveShouldSetPanResponderCapture: () => true,
+            onPanResponderGrant: (e, gestureState) => {
+                this.taskPosition.setValue({ x: 0 });
+            },
+            onPanResponderMove: Animated.event([
+                null, { dx: this.taskPosition.x, dy: 0 },
+            ]),
+            onPanResponderRelease: (e, gestureState) => {
+                const width = Dimensions.get('screen').width;
+
+                Animated.spring(this.taskPosition.x,{ 
+                    toValue: 0, 
+                    friction: 5
+                }).start();
+
+                if (onDragRelease && gestureState.dx > width / 2) {
+                    onDragRelease();
+                }
+            }
+        });
+    }
+
     handleOpacity(delay = 0) {
-        let { 
+        let {
             size,
-            isComplete, 
+            isComplete,
         } = this.props;
 
         Animated.timing(this.nameColor, {
@@ -38,31 +72,39 @@ export default class TaskItem extends Component {
             easing: Easing.ease,
         }).start();
     }
+
     render() {
-        let { 
+        let {
             name,
             onPress,
             onPressCheck,
             isComplete,
         } = this.props;
 
+        let translateX = this.taskPosition.x;
+        let containerStyle = { transform: [{ translateX }] };
+
         let nameStyle = {
             opacity: this.nameColor,
         };
 
         return (
-            <TouchableWithoutFeedback onPress={onPress}>
-                <View style={styles.container}>
+            // <TouchableWithoutFeedback onPress={onPress}>
+                <Animated.View 
+                    {...this.panResponder.panHandlers}
+                    style={[styles.container, containerStyle]}>
                     <View style={{ flex: 1 }}>
-                        <Animated.Text style={[styles.name, nameStyle]}>{name}</Animated.Text>
+                        <Animated.Text style={[styles.name, nameStyle]}>
+                            {name}
+                        </Animated.Text>
                     </View>
                     <View style={{ marginLeft: 32 }}>
-                        <Checkbox 
+                        <Checkbox
                             isChecked={isComplete}
                             onPress={onPressCheck} />
                     </View>
-                </View>
-            </TouchableWithoutFeedback>
+                </Animated.View>
+            // </TouchableWithoutFeedback>
         );
     }
 }
@@ -72,6 +114,7 @@ TaskItem.propTypes = {
     isComplete: PropTypes.bool,
     onPress: PropTypes.func,
     onPressCheck: PropTypes.func,
+    onDragRelease: PropTypes.func,
 };
 
 TaskItem.defaultProps = {
@@ -81,7 +124,7 @@ TaskItem.defaultProps = {
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: 12, 
+        paddingVertical: 12,
         borderBottomWidth: 0.5,
         borderBottomColor: '#eee',
         flexDirection: 'row'

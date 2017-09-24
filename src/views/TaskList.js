@@ -17,6 +17,7 @@ import ButtonPlus from '../components/ButtonPlus';
 import {
     addTask,
     toggleTask,
+    removeTask,
 } from '../config/Actions';
 
 class TaskList extends Component {
@@ -62,6 +63,7 @@ class TaskList extends Component {
             project,
             submit,
             check,
+            remove,
         } = this.props;
 
         return (
@@ -81,7 +83,8 @@ class TaskList extends Component {
                                     key={task.id}
                                     name={task.name}
                                     isComplete={task.isComplete}
-                                    onPressCheck={() => check(task)} />
+                                    onPressCheck={() => check(task)}
+                                    onDragRelease={() => remove(task)} />
                             );
                         })}
                     </ScrollView>
@@ -148,6 +151,9 @@ function mapDispatchToProps(dispatch, ownProps) {
         check: (task) => {
             dispatch(toggleTask(task.id, task.projectID));
         },
+        remove: (task) => {
+            dispatch(removeTask(task.id, task.projectID));
+        },
     }
 }
 
@@ -165,7 +171,7 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
             const id = lastTask ? lastTask.id + 1 : 1;
 
             try {
-                const task = { id, name, projectID };
+                const task = { id, name, projectID, isComplete: false };
                 const tasks = JSON.stringify([...stateProps.tasks, task]);
                 await AsyncStorage.setItem('tasks', tasks);
 
@@ -194,6 +200,21 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
                 await AsyncStorage.setItem('tasks', tasks);
 
                 dispatchProps.check(task);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        remove: async (task) => {
+            try {
+                const tasks = JSON.stringify(stateProps.tasks.filter((stateTask) => {
+                    const isIDValid = task.id == stateTask.id;
+                    const isProjectIDValid = task.projectID == stateTask.projectID;
+    
+                    return !(isIDValid && isProjectIDValid);
+                }));
+
+                await AsyncStorage.setItem('tasks', tasks);
+                dispatchProps.remove(task);
             } catch (error) {
                 console.error(error);
             }
