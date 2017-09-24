@@ -41,18 +41,20 @@ export default class TaskItem extends Component {
             onPanResponderGrant: (e, gestureState) => {
                 this.taskPosition.setValue({ x: 0 });
             },
-            onPanResponderMove: Animated.event([
-                null, { dx: this.taskPosition.x, dy: 0 },
-            ]),
+            onPanResponderMove: (e, gestureState) => {
+                if (gestureState.dx < 0) return;
+                this.taskPosition.setValue({ x: gestureState.dx });
+            },
             onPanResponderRelease: (e, gestureState) => {
                 const width = Dimensions.get('screen').width;
 
                 Animated.spring(this.taskPosition.x,{ 
                     toValue: 0, 
-                    friction: 5
+                    friction: 6,
+                    tension: 0.5,
                 }).start();
 
-                if (onDragRelease && gestureState.dx > width / 2) {
+                if (onDragRelease && gestureState.dx > width * 0.6) {
                     onDragRelease();
                 }
             }
