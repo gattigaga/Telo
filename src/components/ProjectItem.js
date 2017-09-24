@@ -14,6 +14,7 @@ export default class ProjectItem extends Component {
     constructor(props) {
         super(props);
 
+        this.projectOpacity = new Animated.Value(1);
         this.projectPosition = new Animated.ValueXY();
     }
 
@@ -29,6 +30,11 @@ export default class ProjectItem extends Component {
             onMoveShouldSetPanResponderCapture: () => true,
             onPanResponderGrant: (e, gestureState) => {
                 this.projectPosition.setValue({ x: 0 });
+
+                Animated.timing(this.projectOpacity,{ 
+                    toValue: 0.3,
+                    duration: 250,
+                }).start();
             },
             onPanResponderMove: (e, gestureState) => {
                 if (gestureState.dx < 0) return;
@@ -41,6 +47,11 @@ export default class ProjectItem extends Component {
                     toValue: 0, 
                     friction: 6,
                     tension: 0.5,
+                }).start();
+
+                Animated.timing(this.projectOpacity,{ 
+                    toValue: 1,
+                    duration: 250,
                 }).start();
 
                 if (onDragRelease && gestureState.dx > width * 0.6) {
@@ -59,7 +70,10 @@ export default class ProjectItem extends Component {
         } = this.props;
 
         let translateX = this.projectPosition.x;
-        let containerStyle = { transform: [{ translateX }] };
+        let containerStyle = { 
+            transform: [{ translateX }],
+            opacity: this.projectOpacity,
+        };
 
         return (
             <Animated.View 

@@ -15,8 +15,9 @@ import Checkbox from './Checkbox';
 export default class TaskItem extends Component {
     constructor(props) {
         super(props);
-
+        
         this.nameColor = new Animated.Value(1);
+        this.taskOpacity = new Animated.Value(1);
         this.taskPosition = new Animated.ValueXY();
     }
 
@@ -40,6 +41,11 @@ export default class TaskItem extends Component {
             onMoveShouldSetPanResponderCapture: () => true,
             onPanResponderGrant: (e, gestureState) => {
                 this.taskPosition.setValue({ x: 0 });
+
+                Animated.timing(this.taskOpacity,{ 
+                    toValue: 0.3,
+                    duration: 250,
+                }).start();
             },
             onPanResponderMove: (e, gestureState) => {
                 if (gestureState.dx < 0) return;
@@ -52,6 +58,11 @@ export default class TaskItem extends Component {
                     toValue: 0, 
                     friction: 6,
                     tension: 0.5,
+                }).start();
+
+                Animated.timing(this.taskOpacity,{ 
+                    toValue: 1,
+                    duration: 250,
                 }).start();
 
                 if (onDragRelease && gestureState.dx > width * 0.6) {
@@ -83,7 +94,10 @@ export default class TaskItem extends Component {
         } = this.props;
 
         let translateX = this.taskPosition.x;
-        let containerStyle = { transform: [{ translateX }] };
+        let containerStyle = { 
+            transform: [{ translateX }],
+            opacity: this.taskOpacity,
+        };
 
         let nameStyle = {
             opacity: this.nameColor,
