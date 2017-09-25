@@ -4,7 +4,8 @@ import {
     StyleSheet,
     Text,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -73,6 +74,7 @@ class ProjectList extends Component {
 
         return (
             <View style={styles.container}>
+                <StatusBar hidden={true} />
                 <Header title="My Projects" />
                 <View style={{ position: 'absolute', top: 24, right: 24 }}>
                     <ButtonPlus 

@@ -6,6 +6,7 @@ import {
     ScrollView,
     AsyncStorage,
     Animated,
+    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -72,6 +73,7 @@ class TaskList extends Component {
 
         return (
             <View style={styles.container}>
+                <StatusBar hidden={true} />
                 <Header title={project.name} />
                 <View style={{ position: 'absolute', top: 24, right: 24 }}>
                     <ButtonPlus

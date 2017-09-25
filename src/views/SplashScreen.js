@@ -6,6 +6,7 @@ import {
     AsyncStorage,
     Image,
     Animated,
+    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
@@ -63,6 +64,7 @@ class SplashScreen extends Component {
 
         return (
             <View style={styles.container}>
+                <StatusBar hidden={true} />
                 <Animated.Image
                     source={require('../../res/logo.png')}
                     style={[styles.logo, itemStyle]} />
