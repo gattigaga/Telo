@@ -119,7 +119,8 @@ class ProjectList extends Component {
                     })}
                     onChangeText={this.inputProject}
                     value={newProject}
-                    title="New Project" />
+                    title="New Project"
+                    maxChar={24} />
             </View>
         );
     }
