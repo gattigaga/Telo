@@ -1,4 +1,4 @@
-package com.telo;
+package com.gattigaga.telo;
 
 import com.facebook.react.ReactActivity;
 
