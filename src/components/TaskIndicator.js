@@ -18,14 +18,19 @@ export default class TaskIndicator extends Component {
         this.handleBarWidth();
     }
 
+    componentDidUpdate() {
+        this.handleBarWidth();
+    }
+
     handleBarWidth() {
         let { completedTasks, totalTasks } = this.props;
         const width = completedTasks / totalTasks * 100;
+        const duration =  500;
 
         Animated.timing(this.barWidth, {
             toValue: width,
             delay: 250,
-            duration: 800,
+            duration,
         }).start();
     }
 
