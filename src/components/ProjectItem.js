@@ -43,16 +43,17 @@ export default class ProjectItem extends Component {
             onPanResponderRelease: (e, gestureState) => {
                 const width = Dimensions.get('screen').width;
 
-                Animated.spring(this.projectPosition.x,{ 
-                    toValue: 0, 
-                    friction: 6,
-                    tension: 0.5,
-                }).start();
-
-                Animated.timing(this.projectOpacity,{ 
-                    toValue: 1,
-                    duration: 250,
-                }).start();
+                Animated.parallel([
+                    Animated.spring(this.projectPosition.x,{ 
+                        toValue: 0, 
+                        friction: 6,
+                        tension: 0.5,
+                    }),
+                    Animated.timing(this.projectOpacity,{ 
+                        toValue: 1,
+                        duration: 250,
+                    }),
+                ]).start();
 
                 if (onDragRelease && gestureState.dx > width * 0.6) {
                     onDragRelease();

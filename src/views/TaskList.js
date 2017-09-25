@@ -84,7 +84,9 @@ class TaskList extends Component {
                     totalTasks={tasks.length} />
 
                 {tasks.length > 0 ? (
-                    <ScrollView style={{ flex: 1, marginTop: 32 }}>
+                    <ScrollView 
+                        style={{ flex: 1, marginTop: 32 }}
+                        showsVerticalScrollIndicator={false}>
                         {tasks.map((task) => {
                             return (
                                 <TaskItem
@@ -127,7 +129,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
-        padding: 16,
+        paddingHorizontal: 16,
+        paddingTop: 16,
         position: 'relative'
     },
     buttonPlus: {

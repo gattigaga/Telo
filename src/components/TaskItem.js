@@ -54,16 +54,17 @@ export default class TaskItem extends Component {
             onPanResponderRelease: (e, gestureState) => {
                 const width = Dimensions.get('screen').width;
 
-                Animated.spring(this.taskPosition.x,{ 
-                    toValue: 0, 
-                    friction: 6,
-                    tension: 0.5,
-                }).start();
-
-                Animated.timing(this.taskOpacity,{ 
-                    toValue: 1,
-                    duration: 250,
-                }).start();
+                Animated.parallel([
+                    Animated.spring(this.taskPosition.x, { 
+                        toValue: 0, 
+                        friction: 6,
+                        tension: 0.5,
+                    }),
+                    Animated.timing(this.taskOpacity, { 
+                        toValue: 1,
+                        duration: 250,
+                    }),
+                ]).start();
 
                 if (onDragRelease && gestureState.dx > width * 0.6) {
                     onDragRelease();
@@ -83,7 +84,7 @@ export default class TaskItem extends Component {
             toValue: isComplete ? 0.2 : 1,
             duration: 250,
             easing: Easing.ease,
-        }).start();
+        }).start(() => this.isAnimationRun = false);
     }
 
     render() {

@@ -81,7 +81,9 @@ class ProjectList extends Component {
                 </View>
 
                 {projects.length > 0 ? (
-                    <ScrollView style={{ flex: 1, marginTop: 32 }}>
+                    <ScrollView 
+                        style={{ flex: 1, marginTop: 32 }}
+                        showsVerticalScrollIndicator={false}>
                         {projects.map((project) => {
                             const completedTasks = tasks.filter((task) => {
                                 return task.projectID == project.id && task.isComplete;
