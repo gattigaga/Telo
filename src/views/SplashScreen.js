@@ -3,7 +3,9 @@ import {
     View,
     StyleSheet,
     Text,
-    AsyncStorage
+    AsyncStorage,
+    Image,
+    Animated,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { NavigationActions } from 'react-navigation';
@@ -16,27 +18,57 @@ import {
 class SplashScreen extends Component {
     constructor(props) {
         super(props);
+
+        this.itemOpacity = new Animated.Value(0);
+        this.toProjectList = this.toProjectList.bind(this);
     }
 
     componentDidMount() {
         let { getProjects, navigation } = this.props;
 
         getProjects(() => {
-            const resetAction = NavigationActions.reset({
-                index: 0,
-                actions: [
-                    NavigationActions.navigate({ routeName: 'ProjectList' })
-                ]
-            });
-
-            navigation.dispatch(resetAction);
+            this.handleLogo(this.toProjectList);
         });
     }
 
+    handleLogo(callback) {
+        Animated.timing(this.itemOpacity, {
+            toValue: 1,
+            duration: 800,
+        }).start(() => {
+            setTimeout(() => {
+                Animated.timing(this.itemOpacity, {
+                    toValue: 0,
+                    duration: 800,
+                }).start(callback);
+            }, 1000);
+        });
+    }
+
+    toProjectList() {
+        let { navigation } = this.props;        
+
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName: 'ProjectList' })
+            ]
+        });
+
+        navigation.dispatch(resetAction);
+    }
+
     render() {
+        let itemStyle = { opacity: this.itemOpacity };
+
         return (
             <View style={styles.container}>
-                <Text style={styles.text}>Telo</Text>
+                <Animated.Image
+                    source={require('../../res/logo.png')}
+                    style={[styles.logo, itemStyle]} />
+                <Animated.Text style={[styles.text, itemStyle]}>
+                    telo
+                </Animated.Text>
             </View>
         );
     }
@@ -54,9 +86,15 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     text: {
-        color: '#d12121',
+        color: '#6e311e',
         fontWeight: 'bold',
-        fontSize: 64
+        fontSize: 48,
+        marginTop: -16,
+    },
+    logo: {
+        width: 192, 
+        height: 192,
+        resizeMode: 'contain',
     }
 });
 
