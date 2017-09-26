@@ -6,6 +6,7 @@ import {
     ScrollView,
     AsyncStorage,
     Animated,
+    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -34,6 +35,10 @@ class TaskList extends Component {
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.inputTask = this.inputTask.bind(this);
+    }
+
+    componentDidMount() {
+        StatusBar.setHidden(false);
     }
 
     openModal() {

@@ -5,6 +5,7 @@ import {
     Text,
     ScrollView,
     AsyncStorage,
+    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -33,6 +34,10 @@ class ProjectList extends Component {
         this.closeModal = this.closeModal.bind(this);
         this.inputProject = this.inputProject.bind(this);
         this.toTaskList = this.toTaskList.bind(this);
+    }
+
+    componentDidMount() {
+        StatusBar.setHidden(false);
     }
 
     openModal() {
