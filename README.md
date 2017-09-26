@@ -6,6 +6,8 @@ Telo is simple but fully animated task manager built with [React Native](https:/
 * Create and Delete Task inside Project
 * Check to completing task
 
+<img src="./res/screenshot.png" width="320">
+
 ### MIT License
 
 &copy; 2017 - Gattigaga Hayyuta Dewa
