@@ -88,7 +88,7 @@ export default class ProjectItem extends Component {
                             <Text style={styles.task}>{completedTasks} / {totalTasks} Tasks</Text>
                         </View>
                         <View style={styles.caption}>
-                            {completedTasks == totalTasks &&
+                            {(completedTasks == totalTasks && totalTasks > 0) &&
                                 <Animated.Text style={styles.complete}>
                                     COMPLETED
                                 </Animated.Text>
