@@ -19,7 +19,6 @@
     "devDependencies": {
         "babel-jest": "21.0.0",
         "babel-preset-react-native": "3.0.2",
-        "enzyme": "^2.9.1",
         "jest": "21.0.1",
         "react-test-renderer": "16.0.0-alpha.12"
     },
