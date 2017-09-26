@@ -23,9 +23,12 @@ export default class TaskIndicator extends Component {
     }
 
     handleBarWidth() {
-        let { completedTasks, totalTasks } = this.props;
+        const { completedTasks, totalTasks } = this.props;
+
+        if (totalTasks == 0) return;
+
         const width = completedTasks / totalTasks * 100;
-        const duration =  500;
+        const duration = 500;
 
         Animated.timing(this.barWidth, {
             toValue: width,
@@ -83,5 +86,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#81bf42',
         height: 16,
         borderRadius: 4,
+        width: 0,
     }
 });
