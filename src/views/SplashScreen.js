@@ -27,6 +27,8 @@ class SplashScreen extends Component {
     componentDidMount() {
         let { getProjects, navigation } = this.props;
 
+        StatusBar.setHidden(true);
+
         getProjects(() => {
             this.handleLogo(this.toProjectList);
         });

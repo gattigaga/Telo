@@ -6,7 +6,6 @@ import {
     ScrollView,
     AsyncStorage,
     Animated,
-    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -73,7 +72,6 @@ class TaskList extends Component {
 
         return (
             <View style={styles.container}>
-                <StatusBar hidden={true} />
                 <Header title={project.name} />
                 <View style={{ position: 'absolute', top: 24, right: 24 }}>
                     <ButtonPlus
@@ -111,10 +109,17 @@ class TaskList extends Component {
                 <ModalCreate
                     isOpen={isModalOpen}
                     onPressCancel={this.closeModal}
-                    onPressOK={() => submit(newTask, () => {
-                        this.closeModal();
-                        this.setState({ newTask: '' });
-                    })}
+                    onPressOK={() => {
+                        if (newTask.length < 5) {
+                            alert('Insert minimum 5 characters');
+                            return;
+                        }
+
+                        submit(newTask, () => {
+                            this.closeModal();
+                            this.setState({ newTask: '' });
+                        })}
+                    }
                     onChangeText={this.inputTask}
                     value={newTask}
                     title="New Task" />

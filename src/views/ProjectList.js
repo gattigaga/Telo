@@ -5,7 +5,6 @@ import {
     Text,
     ScrollView,
     AsyncStorage,
-    StatusBar,
 } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -74,7 +73,6 @@ class ProjectList extends Component {
 
         return (
             <View style={styles.container}>
-                <StatusBar hidden={true} />
                 <Header title="My Projects" />
                 <View style={{ position: 'absolute', top: 24, right: 24 }}>
                     <ButtonPlus 
@@ -117,10 +115,17 @@ class ProjectList extends Component {
                 <ModalCreate
                     isOpen={isModalOpen}
                     onPressCancel={this.closeModal}
-                    onPressOK={() => submit(newProject, () => {
-                        this.closeModal();
-                        this.setState({ newProject: '' });
-                    })}
+                    onPressOK={() => {
+                        if (newProject.length < 5) {
+                            alert('Insert minimum 5 characters');
+                            return;
+                        }
+
+                        submit(newProject, () => {
+                            this.closeModal();
+                            this.setState({ newProject: '' });
+                        });
+                    }}
                     onChangeText={this.inputProject}
                     value={newProject}
                     title="New Project"
